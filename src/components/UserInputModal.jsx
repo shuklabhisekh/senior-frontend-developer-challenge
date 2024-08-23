@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Button, Textarea, useToast } from "@chakra-ui/react";
 import CommonModal from "./CommonModal";
 import CustomStepper from "./CustomStepper";
-import { isValidJsonObject } from "../utils/validation";
+import { convertStringToJsObject, isValidJsObject } from "../utils/validation";
 
 const steps = [{ title: "Base Object" }, { title: "Patches" }];
 
 const UserInputModal = ({ onSubmit }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
-  const [objectInput, setObjectInput] = useState();
-  const [patchesInput, setPatchesInput] = useState("");
+  const [objectInput, setObjectInput] = useState(null);
+  const [patchesInput, setPatchesInput] = useState([]);
   const toast = useToast();
 
   const handleOpen = () => setIsOpen(true);
@@ -26,7 +26,7 @@ const UserInputModal = ({ onSubmit }) => {
   };
 
   const handleNext = () => {
-    if (!isValidJsonObject(objectInput)) {
+    if (!isValidJsObject(objectInput)) {
       toast({
         title: "Invalid or Empty base object JSON.",
         description: "Please check your JSON object.",
@@ -42,7 +42,7 @@ const UserInputModal = ({ onSubmit }) => {
 
   const handleSubmit = () => {
     try {
-      const parsedObject = JSON.parse(objectInput);
+      const parsedObject = convertStringToJsObject(objectInput);
       const parsedPatches = JSON.parse(patchesInput);
 
       if (!Array.isArray(parsedPatches)) {
