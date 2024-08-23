@@ -43,12 +43,12 @@ const UserInputModal = ({ onSubmit }) => {
   const handleSubmit = () => {
     try {
       const parsedObject = convertStringToJsObject(objectInput);
-      const parsedPatches = JSON.parse(patchesInput);
+      const parsedPatches = convertStringToJsObject(patchesInput);
 
       if (!Array.isArray(parsedPatches)) {
         toast({
           title: "Patches should be an array.",
-          description: "Please enter in patches in array.",
+          description: "Please enter patches in array.",
           position: "top",
           status: "error",
           duration: 2000,
@@ -61,7 +61,7 @@ const UserInputModal = ({ onSubmit }) => {
       handleClose();
     } catch (error) {
       toast({
-        title: "Invalid JSON input.",
+        title: "Invalid input.",
         description: "Please check your input data.",
         position: "top",
         status: "error",
