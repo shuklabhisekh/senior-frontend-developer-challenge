@@ -13,10 +13,10 @@ import {
 const CommonModal = ({ isOpen, onClose, title, footerContent, children }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
-      <ModalOverlay />
+      <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
       <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
-        <ModalCloseButton />
+        <ModalHeader bg="#EDF2F7">{title}</ModalHeader>
+        {onClose && <ModalCloseButton />}
         <ModalBody>{children}</ModalBody>
         <ModalFooter>
           <Flex>{footerContent}</Flex>
