@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Heading,
@@ -8,9 +8,16 @@ import {
   IconButton,
   Tooltip,
 } from "@chakra-ui/react";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import UserInputModal from "./UserInputModal";
 
-const PatchList = ({ patches, onAccept, onReject }) => {
+const PatchList = ({ patches, onAccept, onReject, onAddPatch }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddPatch = (parsedObject, parsedPatches) => {
+    onAddPatch(parsedPatches);
+    setIsModalOpen(false);
+  };
   return (
     <Box>
       <Heading
@@ -25,7 +32,19 @@ const PatchList = ({ patches, onAccept, onReject }) => {
         borderBottom="1px solid "
         borderColor="gray.300"
       >
-        Patch Operations
+        <Flex justifyContent="space-between">
+          Patch Operations
+          <Tooltip label="Add Patch" aria-label="Add Patch Tooltip">
+            <IconButton
+              icon={<AddIcon />}
+              size="sm"
+              isRound={true}
+              colorScheme="blue"
+              onClick={() => setIsModalOpen(true)}
+              aria-label="Add Patch"
+            />
+          </Tooltip>
+        </Flex>
       </Heading>
       <Box>
         {patches.length > 0 ? (
@@ -44,7 +63,7 @@ const PatchList = ({ patches, onAccept, onReject }) => {
                   <Text fontSize="sm">{JSON.stringify(patch, null, 2)}</Text>
                 </Box>
 
-                <Flex mt={4} justify="flex-end">
+                <Flex gap="10px" mt={4} justify="flex-end">
                   <Tooltip
                     label="Accept Patch"
                     aria-label="Accept Patch Tooltip"
@@ -52,12 +71,11 @@ const PatchList = ({ patches, onAccept, onReject }) => {
                     <IconButton
                       icon={<CheckIcon />}
                       colorScheme="green"
-                      variant="outline"
-                      mr={2}
+                      isRound={true}
+                      variant="solid"
                       onClick={() => onAccept(index)}
                       aria-label="Accept Patch"
                       size="sm"
-                      _hover={{ bg: "green.100" }}
                     />
                   </Tooltip>
                   <Tooltip
@@ -67,11 +85,11 @@ const PatchList = ({ patches, onAccept, onReject }) => {
                     <IconButton
                       icon={<CloseIcon />}
                       colorScheme="red"
-                      variant="outline"
+                      isRound={true}
+                      variant="solid"
                       onClick={() => onReject(index)}
                       aria-label="Reject Patch"
                       size="sm"
-                      _hover={{ bg: "red.100" }}
                     />
                   </Tooltip>
                 </Flex>
@@ -80,10 +98,18 @@ const PatchList = ({ patches, onAccept, onReject }) => {
           </VStack>
         ) : (
           <Box pt="20px" textAlign="center">
-            <Text>No patch available</Text>
+            <Text fontSize="lg" color="gray.500">
+              Add new patches to see them here.
+            </Text>
           </Box>
         )}
       </Box>
+      <UserInputModal
+        isModalOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        onSubmit={handleAddPatch}
+        initialStep={1}
+      />
     </Box>
   );
 };

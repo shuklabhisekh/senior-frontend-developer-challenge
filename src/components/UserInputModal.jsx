@@ -1,26 +1,32 @@
-import React, { useState } from "react";
-import { Box, Button, Textarea, useToast } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import CommonModal from "./CommonModal";
 import CustomStepper from "./CustomStepper";
 import { convertStringToJsObject, isValidJsObject } from "../utils/validation";
+import CommonInput from "./CommonInput";
 
 const steps = [{ title: "JS Object" }, { title: "Patches" }];
 
-const UserInputModal = ({ onSubmit }) => {
-  const [isOpen, setIsOpen] = useState(true);
+const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [objectInput, setObjectInput] = useState(null);
-  const [patchesInput, setPatchesInput] = useState([]);
+  const [objectInput, setObjectInput] = useState("");
+  const [patchesInput, setPatchesInput] = useState("");
   const toast = useToast();
 
   const handleClose = () => {
-    setIsOpen(false);
+    closeModal();
     setCurrentStep(0);
+    setPatchesInput("");
+    setObjectInput("");
   };
 
-  const handleStepChange = (step) => {
-    if (step >= 0 && step < steps.length) {
-      setCurrentStep(step);
+  useEffect(() => {
+    if (initialStep) setCurrentStep(initialStep ?? 0);
+  }, [initialStep, currentStep]);
+
+  const handleStepChange = (targetStep) => {
+    if (targetStep >= 0 && targetStep < steps.length) {
+      setCurrentStep(targetStep);
     }
   };
 
@@ -70,18 +76,32 @@ const UserInputModal = ({ onSubmit }) => {
     }
   };
 
+  const handleIncompleteClose = () => {
+    toast({
+      title: "Incomplete Step",
+      description: "Please complete the current step to proceed.",
+      status: "warning",
+      position: "top",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
+
   return (
-    <>
-      <CommonModal
-        isOpen={isOpen}
-        title="Set Up JS Object & Patches"
-        footerContent={
-          currentStep === 0 ? (
-            <Button colorScheme="blue" onClick={() => handleNext()}>
-              Next
-            </Button>
-          ) : (
-            <>
+    <CommonModal
+      isOpen={isModalOpen}
+      onClose={() =>
+        initialStep === 1 ? handleClose() : handleIncompleteClose()
+      }
+      title={currentStep === 0 ? "Set Up JS Object" : "Add Patches"}
+      footerContent={
+        currentStep === 0 ? (
+          <Button colorScheme="blue" onClick={() => handleNext()}>
+            Next
+          </Button>
+        ) : (
+          <>
+            {initialStep !== 1 && (
               <Button
                 colorScheme="blue"
                 variant="outline"
@@ -90,13 +110,15 @@ const UserInputModal = ({ onSubmit }) => {
               >
                 Back
               </Button>
-              <Button colorScheme="blue" onClick={handleSubmit}>
-                Submit
-              </Button>
-            </>
-          )
-        }
-      >
+            )}
+            <Button colorScheme="blue" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </>
+        )
+      }
+    >
+      {initialStep !== 1 && (
         <Box mt="10px">
           <CustomStepper
             currentStep={currentStep}
@@ -104,27 +126,26 @@ const UserInputModal = ({ onSubmit }) => {
             onStepChange={handleStepChange}
           />
         </Box>
-
-        {currentStep === 0 && (
-          <Textarea
-            placeholder="Enter JS object here"
-            value={objectInput}
-            onChange={(e) => setObjectInput(e.target.value)}
-            rows={20}
-            mt="20px"
-          />
-        )}
-        {currentStep === 1 && (
-          <Textarea
-            placeholder="Enter patches array here"
-            value={patchesInput}
-            onChange={(e) => setPatchesInput(e.target.value)}
-            rows={20}
-            mt="20px"
-          />
-        )}
-      </CommonModal>
-    </>
+      )}
+      {currentStep === 0 && (
+        <CommonInput
+          placeholder="Enter JS object here"
+          value={objectInput}
+          onChange={(e) => setObjectInput(e.target.value)}
+          rows={20}
+          mt="20px"
+        />
+      )}
+      {currentStep === 1 && (
+        <CommonInput
+          placeholder="Enter array of patch here"
+          value={patchesInput}
+          onChange={(e) => setPatchesInput(e.target.value)}
+          rows={20}
+          mt="20px"
+        />
+      )}
+    </CommonModal>
   );
 };
 

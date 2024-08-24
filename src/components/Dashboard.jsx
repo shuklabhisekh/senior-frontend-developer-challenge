@@ -6,6 +6,7 @@ import DiffViewer from "./DiffViewer";
 import { Grid, GridItem } from "@chakra-ui/react";
 
 export const Dashboard = () => {
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [baseObject, setBaseObject] = useState({});
   const [patches, setPatches] = useState([]);
   const [currentPatches, setCurrentPatches] = useState([]);
@@ -17,6 +18,11 @@ export const Dashboard = () => {
     setPatches(patches);
     setCurrentPatches(patches);
     setAcceptedPatches([]);
+  };
+
+  const handleAddPatch = (newPatches) => {
+    setPatches([...newPatches, ...patches]);
+    setCurrentPatches([...newPatches, ...currentPatches]);
   };
 
   useEffect(() => {
@@ -47,10 +53,24 @@ export const Dashboard = () => {
     setCurrentPatches(updatedCurrentPatches);
   };
 
+  const handleReset = () => {
+    setIsModalOpen(true);
+    setBaseObject([]);
+    setPatches([]);
+    setCurrentPatches([]);
+    setAcceptedPatches([]);
+    setModifiedObject([]);
+  };
+
   return (
     <>
       {!Object.keys(baseObject).length ? (
-        <UserInputModal onSubmit={handleSubmit} />
+        <UserInputModal
+          isModalOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          onSubmit={handleSubmit}
+          initialStep={0}
+        />
       ) : (
         <Grid templateColumns="repeat(10, 1fr)" gap={4}>
           <GridItem
@@ -61,7 +81,11 @@ export const Dashboard = () => {
             overflow="auto"
             colSpan={8}
           >
-            <DiffViewer original={baseObject} modified={modifiedObject} />
+            <DiffViewer
+              original={baseObject}
+              modified={modifiedObject}
+              onReset={handleReset}
+            />
           </GridItem>
           <GridItem
             colSpan={2}
@@ -74,6 +98,7 @@ export const Dashboard = () => {
               patches={currentPatches}
               onAccept={handleAcceptPatch}
               onReject={handleRejectPatch}
+              onAddPatch={handleAddPatch}
             />
           </GridItem>
         </Grid>
