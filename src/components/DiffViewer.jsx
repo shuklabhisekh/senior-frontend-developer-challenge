@@ -1,9 +1,17 @@
 import { RepeatIcon } from "@chakra-ui/icons";
-import { Box, Flex, Heading, IconButton, Tooltip } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  Tooltip,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import React from "react";
-import ReactDiffViewer from "react-diff-viewer";
+import ReactDiffViewer from "react-diff-viewer-continued";
 
 const DiffViewer = ({ original, modified, onReset }) => {
+  const smallScreen = useBreakpointValue({ base: true, md: false });
   return (
     <Box>
       <Heading
@@ -39,7 +47,8 @@ const DiffViewer = ({ original, modified, onReset }) => {
         <ReactDiffViewer
           oldValue={JSON.stringify(original, null, 2)}
           newValue={JSON.stringify(modified, null, 2)}
-          splitView={true}
+          splitView={!smallScreen}
+          hideLineNumbers={smallScreen}
         />
       </Box>
     </Box>

@@ -13,7 +13,7 @@ Given a JS object and a JSON-patch, create a UI to
 - **React**
 - **React Hook**
 - **fast-json-patch**: For applying JSON patches and deep cloning the original object
-- **react-diff-viewer**: For displaying JSON difference
+- **react-diff-viewer-continued**: For displaying JSON difference
 - **Chakra UI**: For styling
 
 ## Live Demo
@@ -35,11 +35,13 @@ cd senior-frontend-developer-challenge
 ```
 
 3. **Install Dependencies:**
-   ```    
+
+   ```
    npm install
    ```
-> **Note:**  
-> For yarn, use `yarn install` instead of `npm install`.
+
+   > **Note:**  
+   > For yarn, use `yarn install` instead of `npm install`.
 
 4. **To Run**,
 
@@ -51,7 +53,6 @@ cd senior-frontend-developer-challenge
 ### Other Projects and Contributions
 
 - [LinkedIn Profile](https://www.linkedin.com/in/shuklabhisekh/)
-- [Clone of Mailchimp](https://github.com/shuklabhisekh/Clone-of-Mailchimp)
-- [Backend of Theory Clone](https://github.com/shuklabhisekh/Backened_of_Theory_Clone)
+- [Mailchimp](https://github.com/shuklabhisekh/Clone-of-Mailchimp)
+- [Theory](https://github.com/shuklabhisekh/Backened_of_Theory_Clone)
 - [Open Source Contribution: PrimeReact PR](https://github.com/primefaces/primereact/pull/4410)
-

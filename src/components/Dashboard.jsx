@@ -72,14 +72,14 @@ export const Dashboard = () => {
           initialStep={0}
         />
       ) : (
-        <Grid templateColumns="repeat(10, 1fr)" gap={4}>
+        <Grid templateColumns={{ base: "1fr", md: "repeat(10, 1fr)" }} gap={4}>
           <GridItem
-            height="100vh"
+            height={{ base: "auto", md: "100vh" }}
             borderRight="1px solid"
             borderColor="gray.300"
             boxShadow="md"
             overflow="auto"
-            colSpan={8}
+            colSpan={{ base: 5, md: 8 }}
           >
             <DiffViewer
               original={baseObject}
@@ -88,10 +88,10 @@ export const Dashboard = () => {
             />
           </GridItem>
           <GridItem
-            colSpan={2}
+            colSpan={{ base: 5, md: 2 }}
             borderLeft="1px solid"
             borderColor="gray.300"
-            h="100vh"
+            height={{ base: "auto", md: "100vh" }}
             overflow="auto"
           >
             <PatchList
