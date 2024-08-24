@@ -38,8 +38,8 @@ cd senior-frontend-developer-challenge
    ```    
    npm install
    ```
-    > [NOTE]
-   > For yarn, yarn install
+> **Note:**  
+> For yarn, use `yarn install` instead of `npm install`.
 
 4. **To Run**,
 
