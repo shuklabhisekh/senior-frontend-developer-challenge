@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, useToast } from "@chakra-ui/react";
 import CommonModal from "./CommonModal";
 import CustomStepper from "./CustomStepper";
-import { convertStringToJsObject, isValidJsObject } from "../utils/validation";
+import {
+  convertStringToOriginalState,
+  isValidJsObject,
+  validatePatch,
+} from "../utils/validation";
 import CommonInput from "./CommonInput";
-
-const steps = [{ title: "JS Object" }, { title: "Patches" }];
+import ExampleCopiedBox from "./ExampleCopiedBox";
+import { exampleJSObject, examplePatch, steps } from "../utils/constants";
 
 const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -33,8 +37,8 @@ const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
   const handleNext = () => {
     if (!isValidJsObject(objectInput)) {
       toast({
-        title: "Invalid or Empty JS object .",
-        description: "Please check your JS object.",
+        title: "Invalid JS object .",
+        description: "Check the example below for the correct format.",
         position: "top",
         status: "error",
         duration: 2000,
@@ -47,13 +51,13 @@ const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
 
   const handleSubmit = () => {
     try {
-      const parsedObject = convertStringToJsObject(objectInput);
-      const parsedPatches = convertStringToJsObject(patchesInput);
+      const parsedObject = convertStringToOriginalState(objectInput);
+      const parsedPatches = convertStringToOriginalState(patchesInput);
 
-      if (!Array.isArray(parsedPatches)) {
+      if (!Array.isArray(parsedPatches) || !validatePatch(parsedPatches)) {
         toast({
-          title: "Patches should be an array.",
-          description: "Please check your patches.",
+          title: "Invalid Patch Format",
+          description: "Check the example below for the correct format.",
           position: "top",
           status: "error",
           duration: 2000,
@@ -128,22 +132,28 @@ const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
         </Box>
       )}
       {currentStep === 0 && (
-        <CommonInput
-          placeholder="Enter JS object here"
-          value={objectInput}
-          onChange={(e) => setObjectInput(e.target.value)}
-          rows={20}
-          mt="20px"
-        />
+        <>
+          <ExampleCopiedBox example={exampleJSObject} />
+          <CommonInput
+            placeholder="Enter or Paste your JS object here, following the format of the example above."
+            value={objectInput}
+            onChange={(e) => setObjectInput(e.target.value)}
+            rows={16}
+            mt="20px"
+          />
+        </>
       )}
       {currentStep === 1 && (
-        <CommonInput
-          placeholder="Enter array of patch here"
-          value={patchesInput}
-          onChange={(e) => setPatchesInput(e.target.value)}
-          rows={20}
-          mt="20px"
-        />
+        <>
+          <ExampleCopiedBox example={examplePatch} />
+          <CommonInput
+            placeholder="Enter or Paste your patches here, following the format of the example above"
+            value={patchesInput}
+            onChange={(e) => setPatchesInput(e.target.value)}
+            rows={16}
+            mt="20px"
+          />
+        </>
       )}
     </CommonModal>
   );

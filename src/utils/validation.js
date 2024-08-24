@@ -1,6 +1,6 @@
 export const isValidJsObject = (input) => {
   try {
-    const parsed = convertStringToJsObject(input);
+    const parsed = convertStringToOriginalState(input);
     return (
       typeof parsed === "object" &&
       parsed !== null &&
@@ -12,12 +12,31 @@ export const isValidJsObject = (input) => {
   }
 };
 
-export const convertStringToJsObject = (str) => {
+export const convertStringToOriginalState = (str) => {
   try {
     const parsed = new Function(`return ${str};`)();
     return parsed;
   } catch (error) {
-    console.error("Error parsing string to JS object:", error);
     return null;
   }
+};
+
+export const validatePatch = (patches) => {
+  const validOperations = ["add", "remove", "replace", "move", "copy", "test"];
+
+  for (const patch of patches) {
+    if (
+      typeof patch !== "object" ||
+      !patch.op ||
+      !validOperations.includes(patch.op) ||
+      !patch.path ||
+      (patch.op !== "remove" &&
+        patch.value === undefined &&
+        patch.op !== "move" &&
+        patch.op !== "copy")
+    )
+      return false;
+  }
+
+  return true;
 };

@@ -62,7 +62,6 @@ const PatchList = ({ patches, onAccept, onReject, onAddPatch }) => {
                 <Box bg="white" p={4} borderRadius="md" whiteSpace="pre-wrap">
                   <Text fontSize="sm">{JSON.stringify(patch, null, 2)}</Text>
                 </Box>
-
                 <Flex gap="10px" mt={4} justify="flex-end">
                   <Tooltip
                     label="Accept Patch"
