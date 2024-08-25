@@ -1,22 +1,17 @@
 ## Assignment - JS Patch Studio for Senior Front-end Engineer
 
-### Objective
-
-Given a JS object and a JSON-patch, create a UI to
-
-- show the changes due to each patch operation
-- allow the user to approve / reject one patch operation at a time
-- update the UI to show the remaining operations
+### Overview
+A UI tool for applying and managing JSON patches, showing real-time changes and updates.
 
 ### Technologies Used
 
 - **React**
 - **React Hook**
-- **fast-json-patch**: For applying JSON patches and deep cloning the original object
+- **fast-json-patch**: For applying JSON patches, validation of patches and deep cloning the input object
 - **react-diff-viewer-continued**: For displaying JSON difference
 - **Chakra UI**: For styling
 
-## Live Demo
+### Live Demo
 You can view the deployed application here: [Patch Studio](https://patchstudio.netlify.app/)
 
 

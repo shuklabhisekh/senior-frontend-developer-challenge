@@ -3,7 +3,7 @@ import UserInputModal from "./UserInputModal";
 import { applyPatch, deepClone } from "fast-json-patch";
 import PatchList from "./PatchList";
 import DiffViewer from "./DiffViewer";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, useToast } from "@chakra-ui/react";
 
 export const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -12,6 +12,7 @@ export const Dashboard = () => {
   const [currentPatches, setCurrentPatches] = useState([]);
   const [acceptedPatches, setAcceptedPatches] = useState([]);
   const [modifiedObject, setModifiedObject] = useState({});
+  const toast = useToast();
 
   const handleSubmit = (object, patches) => {
     setBaseObject(object);
@@ -30,13 +31,25 @@ export const Dashboard = () => {
   }, [currentPatches, acceptedPatches]);
 
   const applyCurrentPatches = () => {
-    let updatedObject = deepClone(baseObject);
-    const allPatches = [...acceptedPatches, ...currentPatches];
-    allPatches.forEach((patch) => {
-      const { newDocument } = applyPatch(updatedObject, [patch]);
-      updatedObject = newDocument;
-    });
-    setModifiedObject(updatedObject);
+    try {
+      let updatedObject = deepClone(baseObject);
+      const allPatches = [...acceptedPatches, ...currentPatches];
+      allPatches.forEach((patch) => {
+        const { newDocument } = applyPatch(updatedObject, [patch]);
+        updatedObject = newDocument;
+      });
+      setModifiedObject(updatedObject);
+    } catch (error) {
+      toast({
+        title: "Error Applying Patches",
+        description:
+          "An error occurred while applying patches. Check the example below for the correct format..",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
 
   const handleAcceptPatch = (index) => {
@@ -64,7 +77,7 @@ export const Dashboard = () => {
 
   return (
     <>
-      {!Object.keys(baseObject).length ? (
+      {isModalOpen ? (
         <UserInputModal
           isModalOpen={isModalOpen}
           closeModal={() => setIsModalOpen(false)}

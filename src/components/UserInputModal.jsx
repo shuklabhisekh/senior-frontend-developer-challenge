@@ -53,11 +53,15 @@ const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
     try {
       const parsedObject = convertStringToOriginalState(objectInput);
       const parsedPatches = convertStringToOriginalState(patchesInput);
+      const { isValid, errorDetails } = validatePatch(
+        parsedPatches,
+        parsedObject
+      );
 
-      if (!Array.isArray(parsedPatches) || !validatePatch(parsedPatches)) {
+      if (!isValid) {
         toast({
-          title: "Invalid Patch Format",
-          description: "Check the example below for the correct format.",
+          title: "Invalid Patch",
+          description: `${errorDetails}`,
           position: "top",
           status: "error",
           duration: 2000,
@@ -71,7 +75,7 @@ const UserInputModal = ({ isModalOpen, closeModal, onSubmit, initialStep }) => {
     } catch (error) {
       toast({
         title: "Invalid input.",
-        description: "Please check your input.",
+        description: "Check the example below for the correct format.",
         position: "top",
         status: "error",
         duration: 2000,
