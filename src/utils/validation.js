@@ -13,6 +13,7 @@ export const isValidJsObject = (input) => {
 
 export const convertStringToOriginalState = (str) => {
   try {
+    // eslint-disable-next-line
     const parsed = new Function(`return ${str};`)();
     return parsed;
   } catch (error) {

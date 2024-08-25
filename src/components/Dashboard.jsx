@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import UserInputModal from "./UserInputModal";
 import { applyPatch, deepClone } from "fast-json-patch";
 import PatchList from "./PatchList";
@@ -26,11 +26,7 @@ export const Dashboard = () => {
     setCurrentPatches([...newPatches, ...currentPatches]);
   };
 
-  useEffect(() => {
-    applyCurrentPatches();
-  }, [currentPatches, acceptedPatches]);
-
-  const applyCurrentPatches = () => {
+  const applyCurrentPatches = useCallback(() => {
     try {
       let updatedObject = deepClone(baseObject);
       const allPatches = [...acceptedPatches, ...currentPatches];
@@ -43,14 +39,18 @@ export const Dashboard = () => {
       toast({
         title: "Error Applying Patches",
         description:
-          "An error occurred while applying patches. Check the example below for the correct format..",
+          "An error occurred while applying patches. Check the example below for the correct format.",
         status: "error",
         duration: 5000,
         isClosable: true,
         position: "top",
       });
     }
-  };
+  }, [acceptedPatches, baseObject, currentPatches, toast]);
+
+  useEffect(() => {
+    applyCurrentPatches();
+  }, [applyCurrentPatches]);
 
   const handleAcceptPatch = (index) => {
     const acceptedPatch = currentPatches[index];
